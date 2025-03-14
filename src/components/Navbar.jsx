@@ -1,12 +1,12 @@
 import { useState } from "react";
-
+import Image from "./Image";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   return (
     <div className="w-full h-16 md:h-20 flex items-center justify-between">
       {/* Logo */}
       <div className="flex items-center gap-4 text-2xl font-bold">
-        <img src="/logo.png" alt="Company Logo" className="w-8 h-8" />
+        <Image src="logo.png" alt="Company Logo" width={32} height={32} />
         <span>HeyBlogger</span>
       </div>
 
