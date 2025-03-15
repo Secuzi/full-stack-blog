@@ -9,6 +9,7 @@ import RegisterPage from "./routes/RegisterPage.jsx";
 import SinglePostPage from "./routes/SinglePostPage.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout.jsx";
+import { ClerkProvider } from "@clerk/clerk-react";
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
@@ -22,9 +23,15 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key");
+}
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <RouterProvider router={router} />
+    </ClerkProvider>
   </StrictMode>
 );
