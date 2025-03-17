@@ -10,6 +10,12 @@ export default function Image({ src, className, alt, width, height }) {
       className={className}
       width={width}
       height={height}
+      transformation={[
+        {
+          width: width,
+          height: height,
+        },
+      ]}
     />
   );
 }
