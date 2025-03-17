@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import MainCategories from "../components/MainCategories";
+import FeaturedPosts from "../components/FeaturedPosts";
 
 export default function Homepage() {
   return (
@@ -27,7 +28,6 @@ export default function Homepage() {
             // className="text-lg tracking-widest animate-spin animatedButton"
             className="text-lg tracking-widest"
           >
-            {/* 56:20 */}
             <path
               id="circlePath"
               fill="none"
@@ -60,6 +60,8 @@ export default function Homepage() {
       </div>
 
       <MainCategories />
+
+      <FeaturedPosts />
     </div>
   );
 }
