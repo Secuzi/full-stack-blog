@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Image from "../components/Image";
 import PostMenuActions from "../components/PostMenuActions";
 import Search from "../components/Search";
+import Comments from "../components/Comments";
 
 export default function SinglePostPage() {
   return (
@@ -162,6 +163,8 @@ export default function SinglePostPage() {
           <Search />
         </div>
       </div>
+      {/* 1:42:03 */}
+      <Comments />
     </div>
   );
 }

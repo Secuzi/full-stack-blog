@@ -36,7 +36,7 @@ export default function FeaturedPosts() {
             />
           </div>
 
-          {/* Details and Title 1:25:43 na*/}
+          {/* Details and Title*/}
           <div className="w-2/3">
             {/* Details */}
             <div className="flex items-center gap-4 text-sm lg:text-base mb-4">
