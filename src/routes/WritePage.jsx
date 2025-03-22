@@ -11,7 +11,7 @@ export default function WritePage() {
   if (isLoaded && !isSignedIn) {
     return <div>Log in uy inatay!</div>;
   }
-  // 1:53:11
+  // 1:59:20
   return (
     <div className="md:h-[calc(100vh-80px)] h-[calc(100vh-64px)] flex flex-col gap-6">
       <h1 className="text-xl font-light">Create a New Post</h1>
