@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    clerk_userid: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+
     username: {
       type: String,
       required: true,
