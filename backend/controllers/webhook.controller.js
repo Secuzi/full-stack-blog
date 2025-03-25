@@ -13,7 +13,7 @@ export const clerkWebHook = async (req, res) => {
   try {
     msg = wh.verify(payload, headers);
   } catch (err) {
-    res
+    return res
       .status(400)
       .json({ success: false, message: "Webhook verification failed!" });
   }
@@ -24,7 +24,6 @@ export const clerkWebHook = async (req, res) => {
       email: msg.data.email_addresses[0].email_address,
       img: msg.data.profile_image_url,
     });
-    console.log(newUser);
     await newUser.save();
   }
 
