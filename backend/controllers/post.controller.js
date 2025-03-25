@@ -1,4 +1,5 @@
 import Post from "../models/post.model.js";
+import User from "../models/user.model.js";
 export const getPosts = async (req, res) => {
   const posts = await Post.find({});
   return res.status(200).send(posts);
@@ -15,22 +16,40 @@ export const getPost = async (req, res) => {
 };
 
 export const postPost = async (req, res) => {
-  const { title, slug, user, content } = req.body;
-  if (!title || !slug || !user || !content) {
+  const clerkUserId = req.auth.userId;
+  if (!clerkUserId) {
     return res
-      .status(400)
-      .json({ success: false, message: "Invalid credentials!" });
+      .status(401)
+      .json({ success: false, message: "User must be authenticated!" });
   }
-  const post = new Post({ title, slug, user, content });
-  const newPost = await post.save();
-  return res.status(200).json({ success: true, data: newPost });
+  console.log(req.headers);
+  const user = await User.findOne({ clerk_userid: clerkUserId });
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found!" });
+  }
+  const newPost = new Post({ user: user._id, ...req.body });
+  const post = await newPost.save();
+
+  return res.status(200).json({ post });
 };
 export const deletePost = async (req, res) => {
   const { id } = req.params;
-  const post = await Post.findByIdAndDelete(id);
+  const clerkUserId = req.auth.userId;
+  if (!clerkUserId) {
+    return res
+      .status(401)
+      .json({ success: false, message: "User must be authenticated!" });
+  }
+  const user = await User.findOne({ clerk_userid: clerkUserId });
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found!" });
+  }
+
+  const post = await Post.findByIdAndDelete({ _id: id, user: user._id });
+
   if (!post) {
     return res
-      .status(400)
+      .status(403)
       .json({ success: false, message: "Post does not exist!" });
   }
   return res

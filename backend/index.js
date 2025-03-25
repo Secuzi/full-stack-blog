@@ -5,10 +5,17 @@ import postRouter from "./routes/post.route.js";
 import webhookRouter from "./routes/webhook.route.js";
 import commentRouter from "./routes/comment.route.js";
 import "dotenv/config";
+import { clerkMiddleware, requireAuth } from "@clerk/express";
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(clerkMiddleware());
 app.use("/webhooks", webhookRouter);
 app.use(express.json());
+
+app.get("/auth-state", requireAuth(), (req, res) => {
+  res.json("authState");
+});
 
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
