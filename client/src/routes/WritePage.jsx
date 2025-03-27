@@ -4,9 +4,14 @@ import "react-quill-new/dist/quill.snow.css";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
+
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 export default function WritePage() {
   const { isLoaded, isSignedIn } = useUser();
   const { getToken } = useAuth();
+  const navigate = useNavigate();
+
   const mutation = useMutation({
     mutationFn: async (newPost) => {
       const token = await getToken();
@@ -15,6 +20,10 @@ export default function WritePage() {
           Authorization: `Bearer ${token}`,
         },
       });
+    },
+    onSuccess: (res) => {
+      toast.success("Post has been created!");
+      navigate(`/${res.data.slug}`);
     },
   });
   const [value, setValue] = useState("");
@@ -36,7 +45,7 @@ export default function WritePage() {
     };
 
     console.log(data);
-
+    // 3:39:09
     mutation.mutate(data);
   };
 
@@ -78,9 +87,13 @@ export default function WritePage() {
           onChange={setValue}
           className="flex-1 rounded-xl bg-white shadow-md border-transparent"
         />
-        <button className="bg-blue-800 text-white font-medium rounded-xl mt-4 p-2 w-36">
-          Send
+        <button
+          disabled={mutation.isPending}
+          className="bg-blue-800 text-white font-medium rounded-xl mt-4 p-2 w-36 disabled:bg-blue-400 disabled:cursor-not-allowed"
+        >
+          {mutation.isPending ? "Loading..." : "Send"}
         </button>
+        {mutation.isError && <span>{mutation.error.message}</span>}
       </form>
     </div>
   );
