@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 export default function PostList() {
   const fetchPosts = async () => {
-    const res = axios.get(`${import.meta.env.VITE_API_URL}/posts`);
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`);
     return res.data;
   };
 
