@@ -22,6 +22,7 @@ export default function WritePage() {
       });
     },
     onSuccess: (res) => {
+      // 3:43:10
       toast.success("Post has been created!");
       navigate(`/${res.data.slug}`);
     },
@@ -45,7 +46,7 @@ export default function WritePage() {
     };
 
     console.log(data);
-    // 3:39:09
+    // 3:45:39
     mutation.mutate(data);
   };
 
@@ -81,12 +82,18 @@ export default function WritePage() {
           name="desc"
           placeholder="A Short Description"
         />
-        <ReactQuill
-          theme="snow"
-          value={value}
-          onChange={setValue}
-          className="flex-1 rounded-xl bg-white shadow-md border-transparent"
-        />
+        <div className="flex">
+          <div className="flex flex-col gap-2 mr-2">
+            <div className="cursor-pointer">🖼️</div>
+            <div className="cursor-pointer">▶️</div>
+          </div>
+          <ReactQuill
+            theme="snow"
+            value={value}
+            onChange={setValue}
+            className="flex-1 rounded-xl bg-white shadow-md border-transparent"
+          />
+        </div>
         <button
           disabled={mutation.isPending}
           className="bg-blue-800 text-white font-medium rounded-xl mt-4 p-2 w-36 disabled:bg-blue-400 disabled:cursor-not-allowed"

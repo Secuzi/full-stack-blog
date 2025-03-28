@@ -3,6 +3,7 @@ import Post from "../models/post.model.js";
 import * as postController from "../controllers/post.controller.js";
 const router = express.Router();
 
+router.get("/upload-auth", postController.uploadAuth);
 router.get("/", postController.getPosts);
 router.get("/:slug", postController.getPost);
 router.post("/", postController.postPost);
