@@ -69,13 +69,25 @@ export const deletePost = async (req, res) => {
     .json({ success: true, message: "Post deleted successfully!" });
 };
 
-const imagekit = new ImageKit({
-  urlEndpoint: process.env.IK_URL_ENDPOINT,
-  publicKey: process.env.IK_PUBLIC_KEY,
-  privateKey: process.env.IK_PRIVATE_KEY,
-});
+let _imagekitInstance = null;
 
-export const uploadAuth = async (req, res) => {
-  var result = imagekit.getAuthenticationParameters();
+const getImageKit = () => {
+  if (!_imagekitInstance) {
+    _imagekitInstance = new ImageKit({
+      urlEndpoint: process.env.IK_URL_ENDPOINT,
+      publicKey: process.env.IK_PUBLIC_KEY,
+      privateKey: process.env.IK_PRIVATE_KEY,
+    });
+
+    // Safety check (recommended)
+    if (!process.env.IK_PUBLIC_KEY) {
+      throw new Error("ImageKit environment variables not loaded!");
+    }
+  }
+  return _imagekitInstance;
+};
+
+export const uploadAuth = (req, res) => {
+  const result = getImageKit().getAuthenticationParameters();
   res.send(result);
 };

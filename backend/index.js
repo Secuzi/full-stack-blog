@@ -1,10 +1,12 @@
+import dotenv from "dotenv";
+dotenv.config(); // Must be called before other imports
+
 import express from "express";
 import connectDB from "./lib/mongodb.js";
 import userRouter from "./routes/user.route.js";
 import postRouter from "./routes/post.route.js";
 import webhookRouter from "./routes/webhook.route.js";
 import commentRouter from "./routes/comment.route.js";
-import "dotenv/config";
 import { clerkMiddleware, requireAuth } from "@clerk/express";
 import cors from "cors";
 const app = express();
