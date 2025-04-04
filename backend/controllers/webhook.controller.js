@@ -18,13 +18,20 @@ export const clerkWebHook = async (req, res) => {
       .json({ success: false, message: "Webhook verification failed!" });
   }
   if (msg.type === "user.created") {
-    const newUser = new User({
-      clerk_userid: msg.data.id,
-      username: msg.data.username || msg.data.email_addresses[0].email_address,
-      email: msg.data.email_addresses[0].email_address,
-      img: msg.data.profile_image_url,
-    });
-    await newUser.save();
+    try {
+      if (!msg.data.id) return;
+      const newUser = new User({
+        clerk_userid: msg.data.id,
+        username:
+          msg.data.username || msg.data.email_addresses[0].email_address,
+        email: msg.data.email_addresses[0].email_address,
+        img: msg.data.profile_image_url,
+      });
+
+      await newUser.save();
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   if (msg.type === "user.deleted") {

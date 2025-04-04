@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Upload from "../components/Upload";
+import Image from "../components/Image";
 
 export default function WritePage() {
   const { isLoaded, isSignedIn } = useUser();
@@ -22,6 +23,7 @@ export default function WritePage() {
   useEffect(() => {
     img && setValue((prev) => prev + `<p><image src="${img.url}"/></p>`);
   }, [img]);
+
   useEffect(() => {
     video &&
       setValue(
@@ -38,7 +40,7 @@ export default function WritePage() {
       });
     },
     onSuccess: (res) => {
-      // 3:43:10
+      // 4:07:10
       toast.success("Post has been created!");
       navigate(`/${res.data.slug}`);
     },
@@ -70,11 +72,22 @@ export default function WritePage() {
     <div className="md:h-[calc(100vh-80px)] h-[calc(100vh-64px)] flex flex-col gap-6">
       <h1 className="text-xl font-light">Create a New Post</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6 flex-1 mb-6">
-        <Upload type="image" setData={setCover} setProgress={setProgress}>
-          <button className="w-max p-2 shadow-md rounded-xl text-sm text-gray-500 bg-white ">
-            Add a cover image
-          </button>
-        </Upload>
+        <div className="flex items-center gap-8">
+          <Upload type="image" setData={setCover}>
+            <button className="w-max p-2 shadow-md rounded-xl text-sm text-gray-500 bg-white ">
+              Add a cover image
+            </button>
+          </Upload>
+          {cover?.url && (
+            <Image
+              src={cover.filePath}
+              alt="Cover image"
+              width={100}
+              height={100}
+              className="rounded-lg inline-block"
+            />
+          )}
+        </div>
         <input
           className="text-4xl font-semibold bg-transparent outline-none"
           type="text"
@@ -123,7 +136,7 @@ export default function WritePage() {
         >
           {mutation.isPending ? "Loading..." : "Send"}
         </button>
-        {"Progress: " + progress}
+        {/* {"Progress: " + progress} */}
         {/* {mutation.isError && <span>{mutation.error.message}</span>} */}
       </form>
     </div>

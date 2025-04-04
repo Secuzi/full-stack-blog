@@ -2,12 +2,20 @@ import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
 import ImageKit from "imagekit";
 export const getPosts = async (req, res) => {
-  const posts = await Post.find({});
-  return res.status(200).send(posts);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 2;
+
+  const posts = await Post.find({})
+    .populate("user", "username")
+    .limit(limit)
+    .skip((page - 1) * limit);
+  const totalPosts = await Post.countDocuments();
+  const hasMore = page * limit < totalPosts;
+  return res.status(200).send({ posts, hasMore });
 };
 export const getPost = async (req, res) => {
   const { slug } = req.params;
-  const post = await Post.findOne({ slug });
+  const post = await Post.findOne({ slug }).populate("user", "username img");
   if (!post) {
     return res
       .status(400)

@@ -1,40 +1,55 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Image from "../components/Image";
 import PostMenuActions from "../components/PostMenuActions";
 import Search from "../components/Search";
 import Comments from "../components/Comments";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { format } from "timeago.js";
+
+const fetchPost = async (slug) => {
+  const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${slug}`);
+  return res.data;
+};
 
 export default function SinglePostPage() {
+  const { slug } = useParams();
+  const { isPending, error, data } = useQuery({
+    queryKey: ["post", slug],
+    queryFn: () => fetchPost(slug),
+  });
+
+  if (isPending) return "Loading...";
+  if (error) return "Something went wrong... " + error.message;
+  if (!data) return "Post not found!";
+
   return (
     <div className="flex flex-col gap-8">
       {/* Detail */}
       <div className="flex gap-8">
         <div className="lg:w-3/5 flex flex-col gap-8">
           <h1 className="text-xl md:text-3xl xl:text-4xl 2xl:text-5xl font-semibold">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Repellendus, nostrum.
+            {data.title}
           </h1>
           <div className="flex items-center gap-2 text-gray-400 text-sm">
             <span>Written by</span>
             <Link to="" className="text-blue-800">
-              John Doe
+              {data.user.username}
             </Link>
             <span>on</span>
             <Link to="" className="text-blue-800">
-              Web Design
+              {data.category}
             </Link>
-            <span>2 days ago</span>
+            <span>{format(data.createdAt)}</span>
           </div>
-          <p className="text-gray-500 font-medium">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. A omnis
-            repellat, aliquid odit voluptatum vitae in pariatur? Iure sequi
-            debitis error? Consequuntur rerum nam esse!
-          </p>
+          <p className="text-gray-500 font-medium">{data.desc}</p>
         </div>
 
-        <div className="hidden lg:block w-2/5">
-          <Image src="postImg.jpeg" width="600" className="rounded-2xl" />
-        </div>
+        {data.img && (
+          <div className="hidden lg:block w-2/5">
+            <Image src={data.img} width="600" className="rounded-2xl" />
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -117,13 +132,15 @@ export default function SinglePostPage() {
           <h1 className="mb-4 text-sm font-medium">Author</h1>
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-8">
-              <Image
-                src="userImg.jpeg"
-                className="w-12 h-12 rounded-full object-cover"
-                width="48"
-                height="48"
-              />
-              <Link className="text-blue-800">John Doe</Link>
+              {data.user.img && (
+                <Image
+                  src={data.user.img}
+                  className="w-12 h-12 rounded-full object-cover"
+                  width="48"
+                  height="48"
+                />
+              )}
+              <Link className="text-blue-800">{data.user.username}</Link>
             </div>
             <p className="text-sm text-gray-500">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit.
@@ -163,8 +180,7 @@ export default function SinglePostPage() {
           <Search />
         </div>
       </div>
-      {/* 1:42:03 */}
-      <Comments />
+      <Comments postId={data.post._id} />
     </div>
   );
 }

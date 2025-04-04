@@ -36,7 +36,9 @@ export default function Upload({ children, type, setData, setProgress }) {
   };
 
   const onUploadProgress = (progress) => {
-    console.log(progress);
+    if (!progress) {
+      return;
+    }
     setProgress(Math.round((progress.loaded / progress.total) * 100));
   };
 
