@@ -180,7 +180,7 @@ export default function SinglePostPage() {
           <Search />
         </div>
       </div>
-      <Comments postId={data.post._id} />
+      <Comments postId={data._id} />
     </div>
   );
 }
